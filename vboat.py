@@ -2,7 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import cartopy.crs as ccrs
-import cartopy.feature as cfeature
+# import cartopy.feature as cfeature
+from cartopy.io.img_tiles import GoogleTiles
 import numpy as np
 
 # some extra variables
@@ -17,17 +18,30 @@ data = data.sort_values(by='Date/Time')
 
 # Create the figure and axis for the plot
 fig = plt.figure(figsize=(10, 10))
-ax = plt.axes(projection=ccrs.PlateCarree())
+
+tiler = GoogleTiles(style="satellite")
+ax = plt.axes(projection=tiler.crs)
+
+# Add the Google Tiles
+ax.add_image(tiler, 10)  # The second parameter is the zoom level, you can adjust it as needed
+
+
+# for cfeature
+# ax = plt.axes(projection=ccrs.PlateCarree())
+
+
 
 # Add features to the map
-ax.add_feature(cfeature.LAND)
-ax.add_feature(cfeature.OCEAN)
-ax.add_feature(cfeature.COASTLINE)
-ax.add_feature(cfeature.BORDERS, linestyle=':')
+# ax.add_feature(cfeature.LAND)
+# ax.add_feature(cfeature.OCEAN)
+# ax.add_feature(cfeature.COASTLINE)
+# ax.add_feature(cfeature.BORDERS, linestyle=':')
 
 # Set up plot limits and labels
+# ax.set_extent([data['Longitude'].min() - zoom, data['Longitude'].max() + zoom, 
+#               data['Latitude'].min() - zoom, data['Latitude'].max() + zoom])
 ax.set_extent([data['Longitude'].min() - zoom, data['Longitude'].max() + zoom, 
-               data['Latitude'].min() - zoom, data['Latitude'].max() + zoom])
+               data['Latitude'].min() - zoom, data['Latitude'].max() + zoom], crs=ccrs.PlateCarree())
 ax.set_title('Channel swim 11th July 2024')
 
 # Initialize the scatter plot
